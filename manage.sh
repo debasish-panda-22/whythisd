@@ -68,6 +68,8 @@ show_status() {
     echo "  Backend API: http://localhost:3000/api"
     echo "  Backend Direct: http://localhost:3030"
     echo "  API Documentation: http://localhost:3030/ui"
+    echo "  Nginx HTTP: http://localhost:8080"
+    echo "  Nginx HTTPS: https://localhost:8443"
 }
 
 show_logs() {

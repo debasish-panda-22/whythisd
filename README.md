@@ -6,7 +6,7 @@ Production-ready Docker deployment for hianime-api backend + watanuki frontend.
 
 ### Prerequisites
 - Docker and Docker Compose (v2) installed
-- Ports 3000, 3030, 6379, 80, 443 available
+- Ports 3000, 3030, 6379, 8080, 8443 available
 
 ### Setup and Run
 
@@ -116,6 +116,8 @@ VITE_APP_ENABLE_DEBUG=false
 - **Backend API**: http://localhost:3000/api
 - **Backend Direct**: http://localhost:3030
 - **API Documentation**: http://localhost:3030/ui
+- **Nginx HTTP**: http://localhost:8080
+- **Nginx HTTPS**: https://localhost:8443
 - **Redis**: localhost:6379
 
 ## 🔧 Services
@@ -137,7 +139,7 @@ VITE_APP_ENABLE_DEBUG=false
 
 ### Nginx
 - **Purpose**: Reverse proxy
-- **Ports**: 80 (HTTP), 443 (HTTPS)
+- **Ports**: 8080 (HTTP), 8443 (HTTPS)
 - **Features**: SSL termination, gzip compression, security headers
 
 ## 🔒 Security
