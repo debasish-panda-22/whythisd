@@ -3,14 +3,14 @@ FROM oven/bun:1.1.30-alpine
 
 WORKDIR /app
 
-# Copy package files (for any potential future dependencies)
+# Copy package files
 COPY package.json bun.lock* ./
 
-# Copy application files
-COPY index.js ./
+# Install dependencies
+RUN bun install --frozen-lockfile
 
-# Since we're using a minimal backend without complex dependencies,
-# we don't need to install node_modules for now
+# Copy application files
+COPY . .
 
 # Ensure proper permissions
 RUN chmod +x index.js 2>/dev/null || true
