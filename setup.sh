@@ -65,9 +65,8 @@ setup_environment() {
         print_status "Frontend environment file created"
     fi
     
-    # Update environment files with container paths
-    sed -i 's|backend.env|./backend.env|g' docker-compose.yml
-    sed -i 's|frontend.env|./frontend.env|g' docker-compose.yml
+    # Note: Environment files are already correctly referenced in docker-compose.yml
+    # No need to modify the file with sed commands
     
     print_status "Environment setup completed"
 }
@@ -83,15 +82,18 @@ start_services() {
     
     print_status "Services are starting up..."
     
-    # Wait for services to be healthy
-    sleep 20
+    # Wait for services to be healthy (increased time for our backend)
+    print_status "Waiting for services to become healthy (this may take up to 2 minutes)..."
+    sleep 30
     
-    # Check if services are running
-    if docker compose ps | grep -q "Up"; then
-        print_status "Services started successfully"
+    # Check if services are healthy
+    if docker compose ps | grep -q "healthy"; then
+        print_status "Services started successfully and are healthy"
     else
-        print_error "Some services failed to start. Check logs with: docker compose logs"
-        exit 1
+        print_warning "Services are starting but may not be fully healthy yet..."
+        print_warning "Check service status with: docker compose ps"
+        print_warning "Check logs with: docker compose logs"
+        # Don't exit here, let the user see the status
     fi
 }
 
@@ -103,6 +105,8 @@ show_access_info() {
     echo "  Backend API: http://localhost:3000/api"
     echo "  Backend Direct: http://localhost:3030"
     echo "  API Documentation: http://localhost:3030/ui"
+    echo "  Nginx HTTP: http://localhost:8080"
+    echo "  Nginx HTTPS: https://localhost:8443"
     echo "  Redis: localhost:6379"
     echo ""
     print_status "Management Commands:"
