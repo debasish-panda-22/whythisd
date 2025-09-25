@@ -46,6 +46,7 @@ try {
   );
 
   app.get('/', (c) => {
+    console.log('🏠 Root endpoint accessed');
     c.status(200);
     return c.text('welcome to anime API 🎉 start by hitting /api/v1 for documentation');
   });
@@ -53,6 +54,21 @@ try {
   app.get('/ping', (c) => {
     console.log('🏥 Health check ping received');
     return c.text('pong');
+  });
+
+  // Add a simple test endpoint
+  app.get('/test', (c) => {
+    console.log('🧪 Test endpoint accessed');
+    return c.json({
+      status: 'ok',
+      message: 'Backend is working correctly',
+      timestamp: new Date().toISOString(),
+      env: {
+        node_env: process.env.NODE_ENV,
+        port: process.env.PORT,
+        origin: process.env.ORIGIN
+      }
+    });
   });
   
   app.route('/api/v1', hiAnimeRoutes);
