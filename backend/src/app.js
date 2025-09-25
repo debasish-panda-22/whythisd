@@ -9,7 +9,6 @@ import hiAnimeRoutes from './routes/routes.js';
 import { AppError } from './utils/errors.js';
 import { fail } from './utils/response.js';
 import hianimeApiDocs from './utils/swaggerUi.js';
-import { logger } from 'hono/logger';
 
 console.log('🚀 Initializing hianime-api application...');
 
@@ -47,8 +46,6 @@ try {
   // middlewares
 
   // routes
-
-  app.use('/api/v1/*', logger());
 
   app.get('/', (c) => {
     c.status(200);
