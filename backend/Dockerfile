@@ -23,13 +23,15 @@ WORKDIR /app
 
 ENV NODE_ENV production
 
-# Copy application files
-COPY --from=builder /app/public ./public
+# Copy application files (only copy what exists)
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/bun.lock* ./bun.lock*
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/index.js ./index.js
 COPY --from=builder /app/src ./src
+
+# Copy any other existing directories if needed
+COPY --from=builder /app/temps ./temps 2>/dev/null || true
 
 # Use existing bun user from base image
 USER bun
