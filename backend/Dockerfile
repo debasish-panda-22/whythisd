@@ -26,9 +26,7 @@ WORKDIR /app
 
 ENV NODE_ENV production
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 bun
-
+# Copy application files
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/bun.lock* ./bun.lock*
@@ -36,6 +34,7 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/index.js ./index.js
 COPY --from=builder /app/src ./src
 
+# Use existing bun user from base image
 USER bun
 
 EXPOSE 3030

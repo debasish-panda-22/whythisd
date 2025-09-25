@@ -41,26 +41,26 @@ show_help() {
 
 start_services() {
     print_status "Starting services..."
-    docker-compose up -d
+    docker compose up -d
     sleep 5
     print_status "Services started"
 }
 
 stop_services() {
     print_status "Stopping services..."
-    docker-compose down
+    docker compose down
     print_status "Services stopped"
 }
 
 restart_services() {
     print_status "Restarting services..."
-    docker-compose restart
+    docker compose restart
     print_status "Services restarted"
 }
 
 show_status() {
     print_status "Service Status:"
-    docker-compose ps
+    docker compose ps
     
     echo ""
     print_status "Access URLs:"
@@ -73,17 +73,17 @@ show_status() {
 show_logs() {
     if [ -n "$2" ]; then
         print_status "Showing logs for $2..."
-        docker-compose logs -f "$2"
+        docker compose logs -f "$2"
     else
         print_status "Showing logs for all services..."
-        docker-compose logs -f
+        docker compose logs -f
     fi
 }
 
 update_services() {
     print_status "Updating services..."
-    docker-compose down
-    docker-compose up --build -d
+    docker compose down
+    docker compose up --build -d
     print_status "Services updated and restarted"
 }
 
@@ -96,7 +96,7 @@ cleanup() {
 health_check() {
     print_status "Checking service health..."
     
-    if ! docker-compose ps | grep -q "Up"; then
+    if ! docker compose ps | grep -q "Up"; then
         print_error "Services are not running"
         exit 1
     fi
@@ -113,7 +113,7 @@ health_check() {
         print_error "Backend: Unhealthy"
     fi
     
-    if docker-compose exec redis redis-cli ping > /dev/null 2>&1; then
+    if docker compose exec redis redis-cli ping > /dev/null 2>&1; then
         print_status "Redis: Healthy"
     else
         print_error "Redis: Unhealthy"

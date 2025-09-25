@@ -26,12 +26,13 @@ print_error() {
 check_prerequisites() {
     print_status "Checking prerequisites..."
     
+    # Check if Docker and Docker Compose are installed
     if ! command -v docker &> /dev/null; then
         print_error "Docker is not installed. Please install Docker first."
         exit 1
     fi
     
-    if ! command -v docker-compose &> /dev/null; then
+    if ! docker compose version &> /dev/null; then
         print_error "Docker Compose is not installed. Please install Docker Compose first."
         exit 1
     fi
@@ -75,10 +76,10 @@ start_services() {
     print_status "Starting services..."
     
     # Stop any existing services
-    docker-compose down --remove-orphans
+    docker compose down --remove-orphans
     
     # Build and start services
-    docker-compose up --build -d
+    docker compose up --build -d
     
     print_status "Services are starting up..."
     
@@ -86,10 +87,10 @@ start_services() {
     sleep 20
     
     # Check if services are running
-    if docker-compose ps | grep -q "Up"; then
+    if docker compose ps | grep -q "Up"; then
         print_status "Services started successfully"
     else
-        print_error "Some services failed to start. Check logs with: docker-compose logs"
+        print_error "Some services failed to start. Check logs with: docker compose logs"
         exit 1
     fi
 }
@@ -105,13 +106,13 @@ show_access_info() {
     echo "  Redis: localhost:6379"
     echo ""
     print_status "Management Commands:"
-    echo "  View logs: docker-compose logs -f"
-    echo "  Stop services: docker-compose down"
-    echo "  Restart services: docker-compose restart"
-    echo "  Check status: docker-compose ps"
+    echo "  View logs: docker compose logs -f"
+    echo "  Stop services: docker compose down"
+    echo "  Restart services: docker compose restart"
+    echo "  Check status: docker compose ps"
     echo ""
     print_status "Service Health:"
-    docker-compose ps
+    docker compose ps
 }
 
 main() {

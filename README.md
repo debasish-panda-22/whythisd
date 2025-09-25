@@ -5,7 +5,7 @@ Production-ready Docker deployment for hianime-api backend + watanuki frontend.
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Docker and Docker Compose installed
+- Docker and Docker Compose (v2) installed
 - Ports 3000, 3030, 6379, 80, 443 available
 
 ### Setup and Run
@@ -157,13 +157,13 @@ VITE_APP_ENABLE_DEBUG=false
 
 ### Logs
 ```bash
-# View all logs
-docker-compose logs -f
+# View logs
+docker compose logs -f
 
 # View specific service logs
-docker-compose logs -f backend
-docker-compose logs -f frontend
-docker-compose logs -f redis
+docker compose logs -f backend
+docker compose logs -f frontend
+docker compose logs -f redis
 ```
 
 ## 🔄 Updates
@@ -196,10 +196,10 @@ git pull origin main
 2. **Services not starting**
    ```bash
    # Check logs
-   docker-compose logs
+   docker compose logs
    
    # Check container status
-   docker-compose ps
+   docker compose ps
    ```
 
 3. **Memory issues**
@@ -211,7 +211,7 @@ git pull origin main
 ### Reset Setup
 ```bash
 # Stop and remove all containers
-docker-compose down -v
+docker compose down -v
 
 # Remove unused images
 docker system prune -a
