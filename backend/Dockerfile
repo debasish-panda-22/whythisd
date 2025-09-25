@@ -7,7 +7,7 @@ WORKDIR /app
 
 # Install dependencies based on the preferred package manager
 COPY package.json bun.lock* ./
-RUN bun install --frozen-lockfile
+RUN bun install --frozen-lockfile --production=false
 
 # Rebuild the source code only when needed
 FROM base AS builder
@@ -29,6 +29,9 @@ COPY --from=builder /app/bun.lock* ./bun.lock*
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/index.js ./index.js
 COPY --from=builder /app/src ./src
+
+# Ensure all node_modules are readable
+RUN chmod -R +r /app/node_modules
 
 # Run as root to avoid permission issues in container
 # USER bun
