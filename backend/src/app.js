@@ -4,20 +4,22 @@ import { config } from 'dotenv';
 import { rateLimiter } from 'hono-rate-limiter';
 import { swaggerUI } from '@hono/swagger-ui';
 
-import hiAnimeRoutes from './routes/routes.js';
-
-import { AppError } from './utils/errors.js';
-import { fail } from './utils/response.js';
-import hianimeApiDocs from './utils/swaggerUi.js';
-
-console.log('🚀 Initializing hianime-api application...');
+console.log('📦 Loading backend dependencies...');
 
 try {
-  const app = new Hono();
-
-  // Load environment variables
+  // Load environment variables first
   config();
   console.log('✅ Environment variables loaded');
+
+  // Import routes and utilities after env is loaded
+  const hiAnimeRoutes = await import('./routes/routes.js').then(m => m.default);
+  const { AppError } = await import('./utils/errors.js');
+  const { fail } = await import('./utils/response.js');
+  const hianimeApiDocs = await import('./utils/swaggerUi.js').then(m => m.default);
+
+  console.log('✅ All dependencies loaded successfully');
+
+  const app = new Hono();
 
   const origins = process.env.ORIGIN ? process.env.ORIGIN.split(',') : '*';
   console.log(`🌍 CORS origins: ${origins}`);
@@ -42,10 +44,6 @@ try {
       // store: ... , // Redis, MemoryStore, etc. See below.
     })
   );
-
-  // middlewares
-
-  // routes
 
   app.get('/', (c) => {
     c.status(200);
@@ -78,5 +76,6 @@ try {
 
 } catch (error) {
   console.error('❌ Failed to initialize application:', error);
+  console.error('Stack trace:', error.stack);
   throw error;
 }

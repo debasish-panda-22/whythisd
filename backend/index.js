@@ -1,19 +1,30 @@
 import app from './src/app.js';
 import Bun from 'bun';
 
-console.log('Starting hianime-api backend server...');
+console.log('🚀 Starting hianime-api backend server...');
+console.log(`📋 Environment - NODE_ENV: ${process.env.NODE_ENV}`);
+console.log(`📋 Environment - PORT: ${process.env.PORT}`);
+console.log(`📋 Environment - HOSTNAME: ${process.env.HOSTNAME}`);
 
 try {
+  const port = parseInt(process.env.PORT) || 3030;
+  const hostname = process.env.HOSTNAME || '0.0.0.0';
+  
+  console.log(`🔧 Attempting to start server on ${hostname}:${port}`);
+
   const server = Bun.serve({
-    port: 3030,
-    hostname: '0.0.0.0',
+    port: port,
+    hostname: hostname,
     fetch: app.fetch,
   });
 
   console.log(`✅ Server started successfully on port ${server.port}`);
-  console.log(`🏥 Health check available at: http://localhost:3030/ping`);
-  console.log(`📚 API documentation at: http://localhost:3030/ui`);
-  console.log(`🔗 Base API endpoint: http://localhost:3030/api/v1`);
+  console.log(`🏥 Health check available at: http://localhost:${port}/ping`);
+  console.log(`📚 API documentation at: http://localhost:${port}/ui`);
+  console.log(`🔗 Base API endpoint: http://localhost:${port}/api/v1`);
+  
+  // Test the server immediately
+  console.log('🧪 Testing server endpoint...');
   
   // Handle graceful shutdown
   process.on('SIGTERM', () => {
@@ -28,7 +39,11 @@ try {
     process.exit(0);
   });
 
+  // Keep the process alive
+  console.log('🟢 Server is running and ready to accept connections');
+
 } catch (error) {
   console.error('❌ Failed to start server:', error);
+  console.error('Stack trace:', error.stack);
   process.exit(1);
 }
