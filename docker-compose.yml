@@ -81,8 +81,10 @@ services:
     container_name: hianime-nginx
     restart: unless-stopped
     depends_on:
-      - frontend
-      - backend
+      frontend:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
     networks:
       - hianime-network
     ports:

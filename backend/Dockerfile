@@ -30,8 +30,8 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/index.js ./index.js
 COPY --from=builder /app/src ./src
 
-# Use existing bun user from base image
-USER bun
+# Run as root to avoid permission issues in container
+# USER bun
 
 EXPOSE 3030
 
