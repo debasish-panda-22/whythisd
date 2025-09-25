@@ -1,44 +1,24 @@
 # Use the official Bun image
-FROM oven/bun:1.1.30-alpine AS base
+FROM oven/bun:1.1.30-alpine
 
-# Install dependencies only when needed
-FROM base AS deps
 WORKDIR /app
 
-# Install dependencies based on the preferred package manager
+# Copy package files (for any potential future dependencies)
 COPY package.json bun.lock* ./
-RUN bun install --frozen-lockfile
-
-# Rebuild the source code only when needed
-FROM base AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
-COPY . .
-
-# No build step needed for this application
-
-# Production image, copy all the files and run bun
-FROM base AS runner
-WORKDIR /app
-
-ENV NODE_ENV production
 
 # Copy application files
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/bun.lock* ./bun.lock*
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/index.js ./index.js
-COPY --from=builder /app/src ./src
+COPY index.js ./
 
-# Ensure all node_modules are readable
-RUN chmod -R +r /app/node_modules
+# Since we're using a minimal backend without complex dependencies,
+# we don't need to install node_modules for now
 
-# Run as root to avoid permission issues in container
-# USER bun
+# Ensure proper permissions
+RUN chmod +x index.js 2>/dev/null || true
 
 EXPOSE 3030
 
 ENV PORT 3030
 ENV HOSTNAME "0.0.0.0"
+ENV NODE_ENV production
 
 CMD ["bun", "index.js"]
