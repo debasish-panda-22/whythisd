@@ -1,10 +1,51 @@
-import app from './src/app.js';
 import Bun from 'bun';
 
 console.log('🚀 Starting hianime-api backend server...');
 console.log(`📋 Environment - NODE_ENV: ${process.env.NODE_ENV}`);
 console.log(`📋 Environment - PORT: ${process.env.PORT}`);
 console.log(`📋 Environment - HOSTNAME: ${process.env.HOSTNAME}`);
+
+// Simple test app that doesn't depend on complex imports
+const simpleApp = {
+  fetch: (request) => {
+    const url = new URL(request.url);
+    
+    if (url.pathname === '/ping') {
+      console.log('🏥 Health check ping received');
+      return new Response('pong', {
+        status: 200,
+        headers: { 'Content-Type': 'text/plain' }
+      });
+    }
+    
+    if (url.pathname === '/test') {
+      console.log('🧪 Test endpoint accessed');
+      return new Response(JSON.stringify({
+        status: 'ok',
+        message: 'Simple backend is working correctly',
+        timestamp: new Date().toISOString(),
+        env: {
+          node_env: process.env.NODE_ENV,
+          port: process.env.PORT,
+          hostname: process.env.HOSTNAME
+        }
+      }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+    
+    if (url.pathname === '/') {
+      console.log('🏠 Root endpoint accessed');
+      return new Response('Simple backend server is running 🎉', {
+        status: 200,
+        headers: { 'Content-Type': 'text/plain' }
+      });
+    }
+    
+    return new Response('Not found', { status: 404 });
+  }
+};
 
 try {
   const port = parseInt(process.env.PORT) || 3030;
@@ -15,16 +56,13 @@ try {
   const server = Bun.serve({
     port: port,
     hostname: hostname,
-    fetch: app.fetch,
+    fetch: simpleApp.fetch,
   });
 
   console.log(`✅ Server started successfully on port ${server.port}`);
   console.log(`🏥 Health check available at: http://localhost:${port}/ping`);
-  console.log(`📚 API documentation at: http://localhost:${port}/ui`);
-  console.log(`🔗 Base API endpoint: http://localhost:${port}/api/v1`);
-  
-  // Test the server immediately
-  console.log('🧪 Testing server endpoint...');
+  console.log(`🧪 Test endpoint available at: http://localhost:${port}/test`);
+  console.log(`🏠 Root endpoint available at: http://localhost:${port}/`);
   
   // Handle graceful shutdown
   process.on('SIGTERM', () => {
